@@ -34,10 +34,6 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# replaced by zinit below
-# autoload -Uz compinit
-# compinit
-
 # zinit ice ludic wait
 # zinit light zsh-users/zsh-autosuggestions
 # zinit ice lucid wait
@@ -51,18 +47,6 @@ zinit snippet OMZL::grep.zsh
 zinit snippet OMZL::history.zsh
 zinit snippet OMZL::key-bindings.zsh
 
-# zinit snippet OMZP::colored-man-pages
-# zinit snippet OMZP::command-not-found
-# zinit snippet OMZP::fzf
-# zinit snippet OMZP::git
-# zinit snippet OMZP::httpie/_httpie
-# zinit snippet OMZP::nvm
-# zinit snippet OMZP::pyenv
-# zinit snippet OMZP::rsync
-# zinit snippet OMZP::thefuck
-# zinit snippet OMZP::tldr
-# zinit snippet OMZP::zoxide
-
 zinit light-mode for \
 	atload"zicompinit; zicdreplay" \
 	blockf \
@@ -70,18 +54,12 @@ zinit light-mode for \
 	wait \
 	zsh-users/zsh-completions
 
-# 	OMZL::directories.zsh \
-#	OMZL::completion.zsh \
-#	OMZL::compfix.zsh \
-#	OMZL::key-bindings.zsh \
-
 zinit light-mode wait lucid for \
 	OMZP::colored-man-pages \
 	OMZP::command-not-found \
 	OMZP::fzf \
 	OMZP::git \
 	OMZP::nvm \
-	OMZP::pyenv \
 	OMZP::rsync \
 	OMZP::thefuck \
 	OMZP::tldr \
@@ -93,8 +71,25 @@ zinit wait lucid atload'_zsh_autosuggest_start' light-mode for \
 zinit ice lucid wait
 zinit light zsh-users/zsh-syntax-highlighting
 
-export BAT_THEME="Solarized (dark)"
+zinit ice lucid wait
+zinit light junegunn/fzf-git.sh 
 
+if [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+# Pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+
+if [[ -d "$PYENV_ROOT/bin" ]]; then
+  export PATH="$PYENV_ROOT/bin:$PATH"
+fi
+
+if command -v pyenv >/dev/null 2>&1; then
+  eval "$(pyenv init - zsh)"
+fi
+
+# FZF config
 export FZF_DEFAULT_COMMAND='fd --follow --hidden --exclude .git'
 # Template author: Tinted Theming (https://github.com/tinted-theming)
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS"\
@@ -117,6 +112,15 @@ _fzf_compgen_dir() {
   fd --type d --hidden --follow --exclude ".git" . "$1"
 }
 
+# BAT
+export BAT_THEME="Solarized (dark)"
+
+# Aliases
+if [ -f ~/.bash_aliases ]; then
+  . ~/.bash_aliases
+fi
+
+
 alias cd='z'
-alias ls="exa"
+alias ls="eza"
 alias ll="ls --long --icons --group"
